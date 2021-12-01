@@ -36,9 +36,13 @@ namespace MyApi.Controllers
             await Clients.All.SendAsync("UpdateList", _itemList); 
         }
 
-        public async Task ClearList()
+        public async Task RemoveItem(string name)
         {
-            _itemList = new List<Item>();
+            Item item = _itemList.Where(x=> x.Name == name).First();
+            if(item == null)
+                return;
+
+            _itemList.Remove(item);
             await Clients.All.SendAsync("UpdateList", _itemList); 
         }
     }

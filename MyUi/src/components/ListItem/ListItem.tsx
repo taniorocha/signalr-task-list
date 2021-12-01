@@ -5,6 +5,7 @@ import { Item } from '../../types/Item';
 type Props = {
     item: Item;
     onChange(): void
+    removeItem(name: string): void
 }
 
 export default class ListItem extends React.Component<Props> {	
@@ -17,6 +18,7 @@ export default class ListItem extends React.Component<Props> {
 					onChange={()=> this.props.onChange()}
 				/>
 				<label htmlFor="">{this.props.item.name}</label>
+                <div className="image"><a onClick={()=> this.props.removeItem(this.props.item.name)}>➖</a></div>
      		</Container>
 		);
 	}

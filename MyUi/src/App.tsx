@@ -48,11 +48,6 @@ export default class App extends React.Component {
     }
 
     handleKeyUp = async (value: KeyboardEvent) => { 
-        if(value.code === 'Enter' && this.state.itemField === '@ListCleaner'){
-            this.clearList();
-            return;
-        }
-        
         if(value.code !== 'Enter' && value.which !== 13 || this.state.itemField === '')    
             return;
         
@@ -82,9 +77,9 @@ export default class App extends React.Component {
         }
     }
 
-    async clearList(){
+    async removeItem(name: string){
         try{
-            await this.state.connection.invoke("ClearList")
+            await this.state.connection.invoke("RemoveItem", name);
         } catch(e){
             console.log(e);
         }
@@ -109,7 +104,8 @@ export default class App extends React.Component {
 						<ListItem 
                             key={key} 
                             item={item} 
-                            onChange={() => this.changeCheckItem(item.name)} 
+                            onChange={() => this.changeCheckItem(item.name)}
+                            removeItem={(name: string)=> this.removeItem(name)}
                         />
 					))}
 				</Area>
