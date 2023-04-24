@@ -31,7 +31,7 @@ export default class App extends React.Component {
     async joinConnection(){
         try{
             const connection = new HubConnectionBuilder()
-            .withUrl("https://tanio-task-list.herokuapp.com/chat")
+            .withUrl("f4d77cc5-459f-401c-8727-bb91678a7faa/chat")
             .configureLogging(LogLevel.Information)
             .build();
 
