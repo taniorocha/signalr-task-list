@@ -39,4 +39,6 @@ COPY --from=build-front /app/build ./wwwroot
 RUN useradd -m myappuser
 USER myappuser
 
+EXPOSE 80
+
 CMD ASPNETCORE_URLS="http://*:$PORT" dotnet MyApi.dll
