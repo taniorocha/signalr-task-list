@@ -48,7 +48,7 @@ export default class App extends React.Component {
     }
 
     handleKeyUp = async (value: KeyboardEvent) => { 
-        if(value.code !== 'Enter' && value.which !== 13 || this.state.itemField === '')    
+        if(value.code !== 'Enter' && (value.which !== 13 || this.state.itemField === ''))    
             return;
         
         var newList = this.state.list;
