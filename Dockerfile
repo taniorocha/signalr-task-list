@@ -1,21 +1,40 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
-WORKDIR /app
-
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+###################
+# BUILD .NET
+###################
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build-back
 WORKDIR /src
 COPY ["MyApi/MyApi.csproj", "MyApi/"]
 RUN dotnet restore "MyApi/MyApi.csproj"
 COPY ./MyApi ./MyApi
-WORKDIR "/src/MyApi"
+WORKDIR /src/MyApi
 RUN dotnet build "MyApi.csproj" -c Release -o /app/build
-
-FROM build as publish
 RUN dotnet publish "MyApi.csproj" -c Release -o /app/publish
 
-FROM base AS final
+###################
+# BUILD REACT
+###################
+
+FROM node:14-alpine AS build-front
+
 WORKDIR /app
-COPY --from=publish /app/publish .
-COPY ./MyUi/build ./wwwroot
+
+COPY ./MyUi/package.json .
+COPY ./MyUi/package-lock.json .
+
+RUN npm install --only=production && npm cache clean --force
+
+COPY ./MyUi .
+
+RUN npm run build
+
+###################
+# FINAL
+###################
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS final
+WORKDIR /app
+COPY --from=build-back /app/publish .
+# COPY ./MyUi/build ./wwwroot
+COPY --from=build-front /app/build ./wwwroot
 
 RUN useradd -m myappuser
 USER myappuser
